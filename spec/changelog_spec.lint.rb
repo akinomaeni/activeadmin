@@ -6,10 +6,21 @@ RSpec.describe "Changelog" do
     File.read(path)
   end
 
-  it 'has definitions for all implicit links' do
-    implicit_link_names = changelog.scan(/\[([^\]]+)\]\[\]/).flatten.uniq
+  it 'uses the simplest style for implicit links' do
+    expect(changelog).not_to match(/\[([^\]]+)\]\[\]/)
+  end
+
+  it 'has definitions for all issue/pr references' do
+    implicit_link_names = changelog.scan(/\[#([0-9]+)\] /).flatten.uniq
     implicit_link_names.each do |name|
-      expect(changelog).to include("[#{name}]: https")
+      expect(changelog).to include("[##{name}]: https://github.com/activeadmin/activeadmin/pull/#{name}").or include("[##{name}]: https://github.com/activeadmin/activeadmin/issues/#{name}")
+    end
+  end
+
+  it 'has definitions for users' do
+    implicit_link_names = changelog.scan(/\[@([0-9]+)\] /).flatten.uniq
+    implicit_link_names.each do |name|
+      expect(changelog).to include("[@#{name}]: https://github.com/activeadmin/activeadmin/pull/#{name}")
     end
   end
 
