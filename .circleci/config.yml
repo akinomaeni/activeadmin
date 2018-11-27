@@ -45,7 +45,9 @@ version: 2.1
 .format_coverage: &format_coverage
   run:
     name: Format coverage
-    command: tmp/test-reporter format-coverage --input-type simplecov --output tmp/codeclimate.$CIRCLE_JOB.json
+    command: |
+      tmp/test-reporter format-coverage --input-type simplecov --output tmp/codeclimate.$CIRCLE_JOB.json
+      ls -la tmp/* coverage/*
 
 .save_coverage: &save_coverage
   persist_to_workspace:
